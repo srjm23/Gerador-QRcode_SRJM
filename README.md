@@ -5,6 +5,7 @@
 
 Sistema web para geração de QR Codes a partir de URLs ou textos, com opção de download nos formatos PNG, JPEG e PDF.
 
+![Gerador de QR Code SRJM](./img/pdf-srjm-qrcode-generator.png)
 
 ## Tecnologias
 
