@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRJM - Gerador de QR Code Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: url('Image_665c8k665c8k665c.png') no-repeat center center fixed;
+            background-size: cover;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(10, 15, 30, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 242, 254, 0.15);
+        }
+
+        h2 {
+            color: #ffffff;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: #00f2fe;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            outline: none;
+            color: #ffffff;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-gerar {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #0072ff 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-gerar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+        }
+
+        #qrcode-container {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .status-text {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+        }
+
+        img {
+            max-width: 200px;
+            border-radius: 10px;
+            border: 4px solid #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .download-panel {
+            margin-top: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .download-label {
+            color: #ffffff;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .btn-download {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-download:hover {
+            background: #00f2fe;
+            color: #0a0f1e;
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Gerador de QR Code</h2>
+    <div class="subtitle">Sistema SRJM Ativo</div>
+    
+    <div class="input-group">
+        <input type="text" id="text-input" placeholder="Cole o link ou texto aqui...">
+    </div>
+    
+    <button class="btn-gerar" onclick="enviarParaOBackend()">Gerar QRcode</button>
+    
+    <div id="qrcode-container">
+        <span class="status-text">Aguardando inserção de dados...</span>
+    </div>
+
+    <div class="download-panel" id="download-panel">
+        <div class="download-label">Baixar Arquivo</div>
+        <div class="options-grid">
+            <button class="btn-download" onclick="baixarImagem('png')">PNG</button>
+            <button class="btn-download" onclick="baixarImagem('jpeg')">JPEG</button>
+            <button class="btn-download" onclick="baixarPDF()">PDF</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let qrCodeBase64Global = "";
+
+    async function enviarParaOBackend() {
+        const textoInput = document.getElementById('text-input').value;
+        const container = document.getElementById('qrcode-container');
+        const painelDownload = document.getElementById('download-panel');
+
+        if (!textoInput.trim()) {
+            alert("Por favor, digite um link ou texto válido.");
+            return;
+        }
+
+        container.innerHTML = '<span class="status-text" style="color: #00f2fe;">Processando na API...</span>';
+        painelDownload.style.display = "none"; 
+
+        try {
+            const resposta = await fetch('http://localhost:3000/api/gerar-qrcode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ texto: textoInput })
+            });
+
+            const dados = await resposta.json();
+
+            if (resposta.ok) {
+                qrCodeBase64Global = dados.qrCode;
+
+                container.innerHTML = `<img id="qr-image" src="${qrCodeBase64Global}" alt="QR Code gerado">`;
+                container.style.border = "none";
+                container.style.background = "transparent";
+
+                painelDownload.style.display = "flex";
+            } else {
+                container.innerHTML = '<span class="status-text" style="color: #ff4d4d;">Erro na API.</span>';
+                alert(dados.erro);
+            }
+
+        } catch (erro) {
+            console.error("Erro no fetch:", erro);
+            container.innerHTML = '<span class="status-text" style="color: #ff4d4d;">Servidor offline no momento.</span>';
+        }
+    }
+
+    function baixarImagem(formato) {
+        if (!qrCodeBase64Global) return;
+
+        if (formato === 'jpeg') {
+            const img = document.getElementById('qr-image');
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || 300;
+            canvas.height = img.naturalHeight || 300;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+            
+            const link = document.createElement('a');
+            link.download = `qrcode-srjm.${formato}`;
+            link.href = canvas.toDataURL('image/jpeg', 1.0);
+            link.click();
+        } else {
+            const link = document.createElement('a');
+            link.download = `qrcode-srjm.${formato}`;
+            link.href = qrCodeBase64Global;
+            link.click();
+        }
+    }
+    function baixarPDF() {
+    if (!qrCodeBase64Global) return;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+    });
+
+    // 1. Captura e formata a data e hora atual do sistema
+    const agora = new Date();
+    const dataFormatada = agora.toLocaleDateString('pt-BR'); // Ex: 16/06/2026
+    const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); // Ex: 16:22
+    const dataHoraFinal = `${dataFormatada} às ${horaFormatada}`;
+
+    // 2. Título Principal
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("QR Code Gerado - Via Sistema SRJM", 20, 30);
+
+    // 3. Subtítulo com a Data e Hora (com fonte menor e estilo regular/cinza)
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100); // Define a cor do texto para cinza escuro
+    doc.text(`Gerado em: ${dataHoraFinal}`, 20, 38);
+
+    // 4. Insere a imagem do QR Code
+    doc.addImage(qrCodeBase64Global, 'PNG', 55, 55, 100, 100);
+
+    // 5. Salva o arquivo PDF
+    doc.save('qrcode-srjm.pdf');
+    }
+
+    // function baixarPDF() {
+    //     if (!qrCodeBase64Global) return;
+
+    //     const { jsPDF } = window.jspdf;
+    //     const doc = new jsPDF({
+    //         orientation: 'portrait',
+    //         unit: 'mm',
+    //         format: 'a4'
+    //     });
+
+    //     doc.setFont("Helvetica", "bold");
+    //     doc.setFontSize(16);
+    //     doc.text("QR Code Gerado - Via Sistema SRJM", 20, 30);
+    //     doc.addImage(qrCodeBase64Global, 'PNG', 55, 50, 100, 100);
+    //     doc.save('qrcode-srjm.pdf');
+    // }
+</script>
+
+</body>
+</html>
