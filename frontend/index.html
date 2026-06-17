@@ -285,46 +285,25 @@
         format: 'a4'
     });
 
-    // 1. Captura e formata a data e hora atual do sistema
     const agora = new Date();
-    const dataFormatada = agora.toLocaleDateString('pt-BR'); // Ex: 16/06/2026
-    const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); // Ex: 16:22
+    const dataFormatada = agora.toLocaleDateString('pt-BR'); 
+    const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); 
     const dataHoraFinal = `${dataFormatada} às ${horaFormatada}`;
 
-    // 2. Título Principal
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(16);
     doc.text("QR Code Gerado - Via Sistema SRJM", 20, 30);
 
-    // 3. Subtítulo com a Data e Hora (com fonte menor e estilo regular/cinza)
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100); // Define a cor do texto para cinza escuro
+    doc.setTextColor(100, 100, 100); 
     doc.text(`Gerado em: ${dataHoraFinal}`, 20, 38);
 
-    // 4. Insere a imagem do QR Code
     doc.addImage(qrCodeBase64Global, 'PNG', 55, 55, 100, 100);
 
-    // 5. Salva o arquivo PDF
     doc.save('qrcode-srjm.pdf');
     }
 
-    // function baixarPDF() {
-    //     if (!qrCodeBase64Global) return;
-
-    //     const { jsPDF } = window.jspdf;
-    //     const doc = new jsPDF({
-    //         orientation: 'portrait',
-    //         unit: 'mm',
-    //         format: 'a4'
-    //     });
-
-    //     doc.setFont("Helvetica", "bold");
-    //     doc.setFontSize(16);
-    //     doc.text("QR Code Gerado - Via Sistema SRJM", 20, 30);
-    //     doc.addImage(qrCodeBase64Global, 'PNG', 55, 50, 100, 100);
-    //     doc.save('qrcode-srjm.pdf');
-    // }
 </script>
 
 </body>
