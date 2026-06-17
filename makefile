@@ -2,7 +2,7 @@ REGISTRY   = srjm2024
 IMAGE_NAME = gerador-qrcode-srjm
 TAG        = latest
 
-.PHONY: build #push all clean
+.PHONY: build push all 
 
 all: build push
 
