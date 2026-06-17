@@ -38,4 +38,4 @@ http://localhost:3000
 
 ## Autor
 
-João Marcelo Silva
+João Marcelo Silva Beserra
