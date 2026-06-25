@@ -221,7 +221,7 @@
         painelDownload.style.display = "none"; 
 
         try {
-            const resposta = await fetch('http://localhost:3000/api/gerar-qrcode', {
+            const resposta = await fetch('/api/gerar-qrcode', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
