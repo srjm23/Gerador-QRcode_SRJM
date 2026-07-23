@@ -23,8 +23,14 @@ make
 
 ### Executar
 
+
 ```bash
 docker run -d -p 3000:3000 srjm2024/gerador-qrcode-srjm:latest
+```
+## Nova versão com metricas
+
+```bash
+docker run -d -p 3000:3000 srjm2024/gerador-qrcode-srjm:latest-metrics
 ```
 
 Acesse:
@@ -33,6 +39,14 @@ Acesse:
 http://localhost:3000
 ```
 
+## Métricas
+
+A aplicação expõe métricas do processo Node.js e das requisições HTTP no formato
+Prometheus:
+
+```text
+http://localhost:3000/metrics
+```
 
 ## Autor
 
